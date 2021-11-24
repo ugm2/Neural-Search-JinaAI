@@ -1,8 +1,13 @@
 import click
 from neural_search.core.index import index_docs
+from jina import Flow
 
-def query():
-    pass
+def query(query_flow_path):
+    flow = Flow.load_config(query_flow_path)
+    flow.rest_api = True
+    flow.protocol = 'http'
+    with flow:
+        flow.block()
 
 @click.command()
 @click.option('--task', '-t',
@@ -17,8 +22,11 @@ def query():
 @click.option('--index_flow_path', '-f',
               type=click.Path(exists=True, dir_okay=False, file_okay=True),
               default='./flows/index.yml')
+@click.option('--query_flow_path', '-f',
+              type=click.Path(exists=True, dir_okay=False, file_okay=True),
+              default='./flows/query.yml')
 @click.option('--num_docs', '-n', default=1000)
-def main(task, num_docs, path, index_field, index_flow_path):
+def main(task, num_docs, path, index_field, index_flow_path, query_flow_path):
     """
     Main function for running the server.
     """
@@ -30,7 +38,7 @@ def main(task, num_docs, path, index_field, index_flow_path):
             index_flow_path=index_flow_path
         )
     elif task == 'query':
-        query()
+        query(query_flow_path)
     else:
         raise NotImplementedError(
             f'Unknown task: {task}.')

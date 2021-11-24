@@ -13,4 +13,8 @@ Technologies used:
 ## Installation
 
 * Install poetry in your OS using [this guide](https://python-poetry.org/docs/)
-* 
+
+
+## Usage
+
+* Make sure to declare env variable `JINA_PORT` to the desired port number.
